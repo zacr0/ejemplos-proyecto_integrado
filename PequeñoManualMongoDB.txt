@@ -1,0 +1,315 @@
+------------------------------
+            MongoDB
+------------------------------
+
+MongoDB                     MySQL
+---------                   ---------
+Coleccion   equivalente     Tabla
+Documento   equivalente     Fila
+Campo       equivalente     Columna
+
+
+Descarga de MongoDB: http://www.mongodb.org/downloads
+
+Descomprimimos el fichero y nos situamos dentro de la carpeta que ha sido descomprimida
+y luego en la carpeta bin. Ahí crearemos un fichero llamado mongodb.config.
+
+Y dentro de mongodb.config pondremos la ruta donde estará situada nuestra base de datos, en mi caso:
+dbpath=/home/ruben/Documentos/mongodb
+
+Guardamos abrimos la consola nos situamos en la ruta donde hemos descomprimido
+nuestro MongoDB entraremos en la carpeta bin y ejecutamos el siguiente comando:
+
+./mongod --config mongodb.config
+
+Dejaremos ese proceso ejecutandose, abriremos una pestaña nueva en el terminal nos situamos de nuevo
+en la ruta anterior, dentro de la carpeta bin de MongoDB y ejecutamos el siguiente comando:
+
+./mongo
+
+Y ya estaremos en nuestra base de datos de MongoDB.
+
+En MongoDB las ordenes son ejecutadas a través del objeto: db.
+Ejemplos:
+    db.help() -> Muestra todos los comandos de MongoDB con una pequeña ayuda.
+
+Comando 'use' (usar): Para seleccionar la base de datos o para crear una nueva.
+Ejemplos:
+    use ruben -> Selecciona la base de datos 'ruben', si no está creada, la crea.
+
+Método insert: Es el equivalente al insert de SQL y sirve para insertar datos.
+Ejemplos:
+    db.contacto.insert({nombre:'Ruben', apellidos:'Rodriguez'})
+
+* Con el comando anterior creamos una coleccion llamada contacto
+* E introducimos un documento donde los campos serán nombre y apellidos.
+
+Para mostrar el contenido de una coleccion tenemos que poner:
+    db.contacto.find() // Nos devolverá todo el contenido de ésa colección.
+
+Para mostrar las colecciones de nuestra BD:
+    db.getCollectionNames()
+
+O también:
+    show collections
+
+*IMPORTANTE system.indexes contiene información los índices de nuestra base de datos.
+
+A diferencia de las bases de datos relacionales las cuales se basan en esquemas (Entidad-relación)
+en MongoDB puedes introducir lo que te salga de los HUEVOS.
+Ejemplos:
+    db.contacto.insert({nombre:'Pablo', apellido1:'Medina', apellido2:'Suarez', sexo:'Machote'})
+y si ahora ejecutas:
+    db.contacto.find() -> (Yo también me quedé flipado)
+
+Te dejo las consultas para introducir datos en el tutorial venía mal implementado por el tema
+de las comillas, haz un copy/paste tal cual:
+
+db.contacto.insert({ name : 'Horny' , dob : new Date (1992 ,2 ,13 ,7 ,47) , loves : [ 'carrot', 'papaya'], weight : 600 , gender : 'm' , vampires : 63}) ;
+db.contacto.insert({ name : 'Aurora' , dob : new Date (1991 , 0, 24 , 13 , 0) , loves : [ 'carrot' , 'grape'], weight : 450 , gender : 'f', vampires : 43}) ;
+db.contacto.insert({ name : 'Unicrom' , dob : new Date (1973 , 1, 9, 22 , 10) , loves : [ 'energon' , 'redbull'] , weight : 984 , gender : 'm' , vampires : 182}) ;
+db.contacto.insert({ name : 'Roooooodles' , dob : new Date (1979 , 7, 18 , 18 , 44) , loves : [ 'apple'], weight : 575 , gender : 'm' , vampires : 99}) ;
+db.contacto.insert({ name : 'Solnara' , dob : new Date (1985 , 6, 4, 2, 1) , loves :[ 'apple' , 'carrot' , 'chocolate'] , weight :550 , gender : 'f' , vampires :80}) ;
+db.contacto.insert({ name : 'Ayna', dob : new Date (1998 , 2, 7, 8, 30) , loves : [ 'strawberry' , 'lemon'] , weight : 733 , gender : 'f', vampires : 40}) ;
+db.contacto.insert({ name : 'Kenny' , dob : new Date (1997 , 6, 1, 10 , 42) , loves : [ 'grape' , 'lemon'], weight : 690 , gender : 'm', vampires : 39}) ;
+db.contacto.insert({ name : 'Raleigh' , dob : new Date (2005 , 4, 3, 0, 57) , loves : [ 'apple' , 'sugar'], weight : 421 , gender : 'm' , vampires : 2}) ;
+db.contacto.insert({ name : 'Leia', dob : new Date (2001 , 9, 8, 14 , 53) , loves : [ 'apple' , 'watermelon'] , weight : 601 , gender : 'f', vampires : 33}) ;
+db.contacto.insert({ name : 'Pilot' , dob : new Date (1997 , 2, 1, 5, 3) , loves : [ 'apple' , 'watermelon'] , weight : 650 , gender : 'm', vampires : 54}) ;
+db.contacto.insert({ name : 'Nimue' , dob : new Date (1999 , 11 , 20 , 16 , 15) , loves : [ 'grape' , 'carrot'], weight : 540 , gender : 'f'}) ;
+db.contacto.insert({ name : 'Dunx', dob : new Date (1976 , 6, 18 , 18 , 18) , loves : [ 'grape' , 'watermelon'] , weight : 704 , gender : 'm', vampires : 165}) ;
+
+---------- SELECTORES
+
+El tema de los selectores me ha resultado raro aunque es normal viniendo de MySQL. Para buscar
+un contacto por nombre, por ejemplo se utiliza la siguiente orden:
+    db.contacto.find({nombre:'Ruben'})
+
+----------- SELECTORES MAYOR, MENOR O NO IGUAL.
+Es muy sencillo, pero me resulta confuso porque todavía no estoy acostumbrado.
+MongoDB tiene selectores especiales que son los siguientes:
+    $lt : Para menor que...
+    $lte : Para menor o igual que...
+    $gt : Para mayor que...
+    $gte : Para mayor o igual que...
+    $ne : Que no sea igual a...
+Ejemplos de cada uno:
+    db.contacto.find({weight:{$lt: 500}}) // Menor de 500
+    db.contacto.find({weight:{$lte: 450}}) // Menor o igual que 450
+    db.contacto.find({weight:{$gt: 500}}) // Mayor de 500
+    db.contacto.find({weight:{$gte: 450}}) // Mayor o igual que 450
+    db.contacto.find({nombre:{$ne:'Ruben'}}) // nombre no sea igual a Ruben
+
+------------ $EXIST
+Para saber si está o no un campo en un documento:
+    db.contacto.find({vampires:{$exists:false}}) // Devuelve todos los documentos
+                                                 // que no tengan el campo vampires
+
+------------ $OR
+Si queremos utilizar la orden OR en ves de AND:
+    db.contacto.find({nombre: {$exists : true}, $or: [{nombre: 'Pablo'}, {nombre: 'Ruben'}]})
+
+Busca en la colección contacto, documentos donde exista el campo: nombre.
+Y aparezcan el nombre Pablo o Ruben.
+
+------------ MOSTRAR SÓLO UN RESULTADO
+Para mostrar sólo un resultado de una colección se utiliza el siguiente método:
+    db.contacto.findOne() // Te mostrará el primer documento introducido
+
+------------ MOSTRAR BASES DE DATOS
+    show dbs
+
+------------ CONTAR DOCUMENTOS
+Para contar resultados, es la misma sintaxis que el find:
+    db.contacto.count({nombre: {$exists : true}, $or: [{nombre: 'Pablo'}, {nombre: 'Ruben'}]})
+
+------------ ELIMINAR DOCUMENTOS
+Lo mismo que lo anterior:
+    db.contacto.find() // Mostramos todos los documentos
+    db.contacto.count({nombre: {$exists:false}}) // Contamos los documentos que no tengan el campo: nombre.
+    db.contacto.remove({nombre: {$exists:false}}) // Los eliminamos
+    db.contacto.find() // Sólo te debe de salir los documentos de Ruben y de Pablo.
+
+------------ ACTUALIZAR DOCUMENTOS
+OJO CUIDADO, por defecto, update solo actualiza el primer documento encontrado.
+Éste update es algo diferente al de SQL y se verá ahora:
+    db.contacto.insert({nombre:"Ruben", apellido:"Rodriguez"}) // Creamos éste documento
+    db.contacto.update({nombre:"Ruben"},{nombre:"Rubén"}) // Y modificamos Ruben por Rubén
+    db.contacto.find() // Sólo muestra el campo reemplazado, Rubén.
+
+Éste update REEMPLAZA al documento original, tal cual.
+Si lo que queremos es MODIFICAR un campo tenemos que utilizar el modificador $set.
+Ejemplos:
+    db.contacto.remove({nombre:"Rubén"}) // Eliminamos
+    db.contacto.insert({nombre:"Ruben", apellido:"Rodriguez"}) // Creamos éste documento
+    db.find() // Elegimos el id del documento a modificar
+    db.contacto.update( { "_id" : ObjectId("53272b8e784ddd3bbd1488bb") }, { $set : { apellido : "Ruben"} } )
+
+Y con éso modificamos el documento como un UPDATE normal en SQL.
+
+------ ACTUALIZAR CAMPOS ENTEROS
+Para actualizar campos que no sean de tipo String necesitamos el operador $inc
+Ejemplo:
+    db.contacto.insert({nombre:"Ruben", apellido:"Rodriguez", edad: 0})
+    db.contacto.update( { "_id" : ObjectId("53273109784ddd3bbd1488be") }, { $inc : {edad : 18} } )
+
+Incrementa la edad de Ruben en +18.
+
+----- AÑADIR UN CAMPO NUEVO
+    db.contacto.update( { "_id" : ObjectId("53273109784ddd3bbd1488be") }, { $push : {dni : "20224855N"} } )
+
+Añade un nuevo campo al documento Ruben.
+
+----- UPSERTS
+Una de las sorpresas mas agradables de los updates es que es completamente compatible con upserts.
+Un upsert actualiza el documento si lo encuentra o lo inserta sino lo encuentra.
+
+Upserts son útiles de tener en determinadas situaciones, cuando lo ejecutes, lo sabrás.
+Para habilitar upserting fijamos un tercer parámetro a true. Un ejemplo clásico es un
+contador de visitas de un sitio web. Si queremos mantener un recuento total en tiempo real,
+tendríamos que ver si el registro ya existía para la página, y basado en eso decidiremos
+si correr un update o un insert. Con el tercer parámetro omitido (o establecido en false),
+ejecutando lo siguiente y no hará nada:
+    db.contacto.update({ page : 'contador de visitas'}, { $inc : { contador : 1}});
+    db.contacto.find() // No hay nada
+
+Sin embargo, si nos permiten upserts, los resultados son muy diferentes:
+    db.contacto.update({ page : 'contador de visitas'}, { $inc : { contador : 1}},true);
+    db.contacto.find() // Creado
+
+Dado que no existen documentos con un campo page igual contador de visitas,
+se inserta un nuevo documento. Si se ejecuta una segunda vez, el documento existente
+se actualiza y hits se incrementa a 2.
+    db.contacto.update({ page : 'contador de visitas'}, { $inc : { contador : 1}},true);
+    db.contacto.find() // Creado
+
+----- ACTUALIZACIONES MULTIPLES
+Borra los datos de la coleccion contacto e inserta éstos datos:
+    db.contacto.insert({nombre:"Ruben", apellido:"Rodriguez", edad: 0})
+    db.contacto.insert({nombre:"Ruben", apellido:"Rodriguez", edad: 0})
+    db.contacto.insert({nombre:"Ruben", apellido:"Rodriguez", edad: 0})
+
+La ultima sorpresa que update tiene para ofrecer es que, por defecto, se va a
+actualizar un unico documento. Hasta el momento, por los ejemplos que hemos visto,
+esto puede parecer lógico. Sin embargo, si se ejecuta algo como:
+    db.contacto.update({},{$set: {edad:18}}) // Sólo se actualiza uno
+    db.contacto.find({edad:18}) // Sólo muestra uno
+
+Probablemente esperas encontrar todos tus contactos con edad 18.
+Para poder obtener eso, es necesario asignar un cuarto parametro a true:
+    db.contacto.update({},{$set: {edad:18}}, false, true) // Actualiza los 3
+    db.contacto.find({edad:18}) // Muestra los 3
+
+----- FIND
+FIND - SELECCION DE CAMPOS
+Seleccionar sólo los campos que nos interesen, debes saber que find toma un segundo
+parámetro opcional. Este parámetro es la lista de los campos que quieres obtener.
+Por ejemplo, podemos obtener todos los nombres de contactos ejecutando:
+    db.contacto.find(null,{nombre:1})
+
+Por defecto, el campo _id siempre es retornado. Podemos excluirlo explicitamente
+especificando {nombre:1, _id: 0}.
+    db.contacto.find(null,{nombre:1, _id: 0})
+
+FIND - ORDENAMIENTO
+Borra los datos de la coleccion contacto e inserta éstos datos:
+    db.contacto.insert({nombre:"Raton", peso: 5})
+    db.contacto.insert({nombre:"Gato", peso: 15})
+    db.contacto.insert({nombre:"Tigre", peso: 50})
+Con el método sort podemos ordenar de manera ascendente o descendente, para ascendente
+se utiliza 1 y para descendente -1:
+    db.contacto.find(null,{_id:0}).sort({peso: -1}) // Los más pesados primero
+
+    db.contacto.insert({nombre:"Gato", peso: 25})
+    db.contacto.find(null,{_id:0}).sort({nombre:1, peso: -1})
+
+La última consulta es ordenado primero por nombre ascendente y luego por peso descendente.
+
+FIND - PAGINACIÓN
+Paginar los resultados puede ser logrado a través de los métodos de cursores
+limit y skip. Para obtener el segundo y tercer contacto más pesados, podemos hacer:
+    db.contacto.find(null,{_id:0}).sort({peso: -1}).limit(2).skip(1)
+
+limit: Muestra el límite de documentos que quieres ver.
+skip: Muestra los documentos según el número específicado en el limit, en el caso anterior
+de 2 en dos.
+
+FIND - COUNT
+La terminal de Mongo hace posible ejecutar count directamente en una colección, así:
+    db.contacto.count({peso: {$gt: 5}})
+
+En realidad, count es un metodo cursor, la terminal solo provee un atajo.
+Los drivers que no proveen ese atajo necesitan ser ejecutado así
+(que también funcionara en la terminal):
+    db.contacto.find({peso: {$gt: 5}}).count()
+
+----- NO JOINS
+La primera diferencia y la mas fundamental con la que tendras que acostumbrarte es
+la falta de joins en MongoDB. No se la razón especifica por la que algunos tipos de
+joins no están soportados en MongoDB, pero si se, que los joins son
+vistos generalmente como no escalables.
+
+Esto es, una vez que empiezas a separar tu datos horizontalmente, terminas usando joins
+en el lado del cliente (la aplicación en enl servidor). Cuales quiera sean las razones,
+el hecho es que los datos son relacionales, y MongoDB no soporta joins.
+
+Sin saber mas nada, para vivir en un mundo sin joins, debemos hacer joins nosotros mismos
+en nuestro código de aplicación. Esencialmente debemos hacer un query para encontrar
+los datos relevantes. Configurar nuestros datos no es nada diferente a declarar una
+clave foranea en una base de datos relacional. Vamos a quitarle el foco a nuestros contactos
+y usaremos nuestros employees (empleados). Lo primero que haremos es
+crear nuestro empleados (Le proveo un _id explicito para tener ejemplos coherentes).
+
+    db.employees.insert({ _id : ObjectId ("4d85c7039ab0fd70a117d730"),name:"Leto"})
+
+Ahora agregaremos algunos empleados, y colocamos como su manager a Leto:
+
+db.employees.insert({ _id : ObjectId ("4d85c7039ab0fd70a117d731") ,name:"Duncan",
+manager : ObjectId("4d85c7039ab0fd70a117d730") }) ;
+db.employees.insert({ _id : ObjectId ("4d85c7039ab0fd70a117d732") , name:"Moneo",
+manager : ObjectId("4d85c7039ab0fd70a117d730") }) ;
+
+(Vale la pena recalcar que el _id puede ser cualquier valor unico. Como casi siempre usaras
+ObjectId en la vida real, lo usaremos tambien)
+
+Por supuesto, para encontrar todos los empleados de Leto, simplemente ejecutas:
+    db.employees.find ({ manager : ObjectId ("4d85c7039ab0fd70a117d730") })
+    
+No hay nada magico en esto. En el peor escenario, la mayoría del tiempo, la falta de
+joins solo requerira de un query extra (casi siempre indexado).
+
+----- NO JOINS - ARREGLOS Y DOCUMENTOS EMBEBIDOS
+Solo porque MongoDB no tenga joins no quiere decir que no tenga algunos trucos bajo
+su manga. Recuerdas cuando vimos que MongoDB soporta arreglos como objetos primarios
+de un documento? Resulta que esto es increíblemente bueno cuando lidiamos con
+relaciones muchos-a-uno o muchos-a-muchos.
+
+Como un ejemplo simple, si un empleado puede tener dos managers, podemos almacenarlos
+en un arreglo:
+
+db.employees.insert({ _id : ObjectId ("4d85c7039ab0fd70a117d733") , name:"Siona",
+manager: [ ObjectId ("4d85c7039ab0fd70a117d730") , ObjectId ("4d85c7039ab0fd70a117d732") ] })
+
+Es de particular interes que, para algunos documentos, manager puede ser un valor escalar,
+mientras que para otros puede ser un arreglo. Nuestro query original find
+funcionará para ambos:
+    db.employees.find({ manager : ObjectId ("4d85c7039ab0fd70a117d730") })
+
+
+* VENIA EN INGLÉS ÉSTA PARTE
+
+You’ll quickly find that arrays of values are much more convenient to deal
+with than many-to-many join-tables.
+
+Besides arrays, MongoDB also supports embedded documents. Go ahead and try inserting
+a document with a nested document, such as:
+
+db.employees.insert({ _id : ObjectId ("4d85c7039ab0fd70a117d734") , name :"Ghanima" , family : { mother: "Chani" , father: "Paul" , brother : ObjectId ("4d85c7039ab0fd70a117d730") }})
+
+En el caso de que te pregunte, los documentos embebidos puedes ser accedidos
+usando la notación de punto:
+    db.employees.find({'family.mother':'Chani'})
+
+Hablaremos brevemente de donde se posicionan los documentos embebidos y como usarlos.
+
+
+--- SEGUIR EL TUTORIAL DESDE LA PÁGINA 15 EL APARTADODBRef
