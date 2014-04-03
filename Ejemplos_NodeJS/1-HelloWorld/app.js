@@ -3,7 +3,6 @@
  * servidor que será un servidor http
  */
 var http = require('http');
-//// EJEEMMPLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 
 
 /*
